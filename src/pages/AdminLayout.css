@@ -1,0 +1,19 @@
+/* Forzar color negro en los enlaces del sidebar admin */
+.admin-layout .admin-nav .nav-link {
+  color: #000 !important;
+  font-weight: 500;
+}
+
+/* Hover / focus */
+.admin-layout .admin-nav .nav-link:hover,
+.admin-layout .admin-nav .nav-link:focus {
+  color: #000 !important;
+  text-decoration: none;
+  background-color: rgba(0,0,0,0.03);
+}
+
+/* Mantener el hr con separación */
+.admin-layout .admin-nav hr {
+  margin: 0.75rem 0;
+  border-color: #09345f;
+}
