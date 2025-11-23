@@ -6,16 +6,21 @@ export default function Home() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // carga todos los productos desde la persistencia
-    const all = readAll();
-
-    // Prioriza productos en oferta y completa con otros hasta 3 items
-    const offers = all.filter(p => p.offer);
-    const rest = all.filter(p => !p.offer);
-    const featured = [...offers, ...rest].slice(0, 3);
-
-    setProducts(featured);
-  }, []);
+  let mounted = true;
+  async function load() {
+    try {
+      const all = await readAll();
+      const offers = all.filter(p => p.offer);
+      const rest = all.filter(p => !p.offer);
+      const featured = [...offers, ...rest].slice(0, 3);
+      if (mounted) setProducts(featured);
+    } catch (err) {
+      console.error('Error cargando productos', err);
+    }
+  }
+  load();
+  return () => { mounted = false; };
+}, []);
 
   return (
     <div>

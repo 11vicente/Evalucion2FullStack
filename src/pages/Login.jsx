@@ -1,55 +1,69 @@
-// src/pages/Login.jsx
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authenticate, readById } from '../data/usersCRUD';
+import { useNavigate, Link } from 'react-router-dom';
+import { login } from '../data/usersCRUD';
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
   const navigate = useNavigate();
+  const [form, setForm] = useState({ email: '', password: '' });
+  const [mensaje, setMensaje] = useState('');
 
-  function handleSubmit(e) {
-    e.preventDefault();
-    const user = authenticate(email, pass);
-    if (!user) {
-      alert('Credenciales inválidas.');
-      return;
-    }
-    // guarda sesión mínima
-    localStorage.setItem('ms_current_user', JSON.stringify({ id: user.id, nombre: user.nombre, email: user.email }));
-    localStorage.setItem('isAdmin', user.isAdmin ? 'true' : 'false');
-    if (user.isAdmin) {
-      navigate('/admin');
-    } else {
-      navigate('/');
-    }
+  function handleChange(e) {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
   }
 
-  function handleLogout() {
-    localStorage.removeItem('ms_current_user');
-    localStorage.setItem('isAdmin', 'false');
-    window.location.href = '/';
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setMensaje('');
+    try {
+      await login({ email: form.email, password: form.password });
+      setMensaje('Inicio de sesión correcto. Redirigiendo...');
+      setTimeout(() => navigate('/'), 600);
+    } catch (err) {
+      setMensaje(err.message || 'Error al iniciar sesión');
+    }
   }
 
   return (
-    <div className="row justify-content-center">
-      <div className="col-md-6">
-        <h2 className="mb-3">Iniciar sesión</h2>
+    <div className="container my-4" style={{ maxWidth: 560 }}>
+      <h1 className="titulo text-center mt-4">Iniciar Sesión</h1>
+
+      <section className="login-container my-4">
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
-            <label className="form-label">Correo</label>
-            <input className="form-control" value={email} onChange={e => setEmail(e.target.value)} type="email" required />
+            <label htmlFor="email" className="form-label">Correo</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              className="form-control"
+              value={form.email}
+              onChange={handleChange}
+              required
+            />
           </div>
+
           <div className="mb-3">
-            <label className="form-label">Contraseña</label>
-            <input type="password" className="form-control" value={pass} onChange={e => setPass(e.target.value)} required />
+            <label htmlFor="password" className="form-label">Contraseña</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              className="form-control"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
           </div>
+
           <div className="d-flex gap-2">
-            <button className="btn btn-primary" type="submit">Entrar</button>
-            <button type="button" className="btn btn-outline-secondary" onClick={handleLogout}>Cerrar sesión</button>
+            <button type="submit" className="btn btn-primary">Iniciar Sesión</button>
+            <Link to="/register" className="btn btn-outline-secondary">Registrar</Link>
           </div>
         </form>
-      </div>
+
+        {mensaje && <div className="mt-3 alert alert-info">{mensaje}</div>}
+      </section>
     </div>
   );
 }

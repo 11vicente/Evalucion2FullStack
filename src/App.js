@@ -38,17 +38,19 @@ export default function App() {
           <Route path="/tracking" element={<Tracking />} />
           <Route path="/tracking/:userId/:orderId" element={<Tracking />} />
           {/* admin: rutas anidadas protegidas */}
-          <Route path="/admin" element={
-            <ProtectedRoute>
-              <AdminLayout />
-            </ProtectedRoute>
-          }>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<AdminProducts />} />
-            <Route path="users" element={<AdminUsers />} />
-            <Route path="orders" element={<AdminOrders />} />c
-            {/* puedes añadir más rutas: <Route path="orders" element={<AdminOrders />} /> */}
-          </Route>
+            <Route
+  path="/admin"
+  element={
+    <ProtectedRoute roles={["ADMIN"]}>
+      <AdminLayout />
+    </ProtectedRoute>
+  }
+>
+  <Route path="dashboard" element={<AdminDashboard />} />
+  <Route path="products" element={<AdminProducts />} />
+  <Route path="orders" element={<AdminOrders />} />
+  <Route path="users" element={<AdminUsers />} />
+</Route>
         </Routes>
       </main>
       <Footer />

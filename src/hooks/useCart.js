@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getById } from '../data/productsData';
+import { readById } from '../data/productsCRUD';
 
 const STORAGE_KEY = 'carrito_ms';
 const CUPON_KEY = 'cupon_ms';
@@ -48,7 +48,7 @@ export default function useCart() {
 
   function totals() {
     const subtotal = items.reduce((acc, it) => {
-      const p = getById(it.id);
+      const p = readById(it.id);
       return acc + (p ? p.price * it.qty : 0);
     }, 0);
 
