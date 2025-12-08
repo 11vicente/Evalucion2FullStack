@@ -1,1 +1,18 @@
 npx karma start
+
+
+POST /api/products
+{"title": "torta de cuchufli",
+    "description": "test",
+    "img": "/img/cuchufli.jfif",
+    "price": 1,
+    "stock": 6,
+    "offer": false,
+    "category": "tortas"
+  }
+
+
+POST /api/auth/register /api/auth/login
+  { "nombre": "Prueba", 
+  "email": "test@local.test", 
+  "password": "1234567"  }
